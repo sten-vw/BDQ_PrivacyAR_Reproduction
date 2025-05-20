@@ -1,4 +1,11 @@
 # BDQ_PrivacyAR
+Run with: python train.py --datadir SBU_dataset
+
+## Environment
+I have cuda 12.6. Cuda is required
+## Setup
+Put the pretrained models under /pretrained
+Put the dataset in SBU_dataset/SBU
 
 ## Dataset Link
 https://www.kaggle.com/datasets/dasmehdixtr/two-person-interaction-kinect-dataset/data
