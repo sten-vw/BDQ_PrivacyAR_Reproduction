@@ -1,3 +1,6 @@
+action-recognition-pytorch-entropy/SBU_dataset
+action-recognition-pytorch-entropy/pretrained
+
 # Editors
 .vscode/
 .idea/
