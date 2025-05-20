@@ -16,9 +16,9 @@ import torch.utils.data
 import torch.utils.data.distributed
 import torch.multiprocessing as mp
 from torch.optim import lr_scheduler
-import tensorboard_logger
 import torch.nn.functional as F
 import csv
+import sys
 
 from models._internally_replaced_utils import load_state_dict_from_url
 
@@ -305,26 +305,28 @@ def main_worker(gpu, ngpus_per_node, args):
 
     
     sys.stdout.flush()
-    kinetics_path = ''
+    # https://github.com/IBM/action-recognition-pytorch/releases/download/weights-v0.1/K400-I3D-ResNet-50-f32.pth.tar
+    kinetics_path = 'pretrained/K400-I3D-ResNet-50-f32.pth.tar'
     checkpoint = torch.load(kinetics_path)
     model_target.load_state_dict(checkpoint['state_dict'], strict= False)
-
+    # # https://download.pytorch.org/models/resnet50-19c8e357.pth
     sys.stdout.flush()
-    imagenet_path = ''
-    checkpoint = torch.load(imagenet_path)
-    model_budget.load_state_dict(checkpoint['state_dict'], strict= False)
+
+    imagenet_path = 'pretrained/resnet50-19c8e357.pth'
+    checkpoint = torch.load(imagenet_path, weights_only=False)
+    model_budget.load_state_dict(checkpoint, strict= False)
     
 
 
-    total_epochs= 100
+    total_epochs= 50
 
-
+    # make results dir first
     save_dest = 'results/sbu'
     if not os.path.isdir(save_dest):
         os.mkdir(save_dest)
             
 
-    ctr=5
+    ctr=0
     while ctr<1:
     #for ctr in down:       
         #----------------- START OF Adv TRAINING------------------#
@@ -338,8 +340,8 @@ def main_worker(gpu, ngpus_per_node, args):
         params_b = model_budget.parameters()
         optimizer_t = torch.optim.SGD(params_t, args.lr, momentum=args.momentum, weight_decay=args.weight_decay, nesterov=args.nesterov)
         optimizer_b = torch.optim.SGD(params_b, args.lr, momentum=args.momentum, weight_decay=args.weight_decay, nesterov=args.nesterov)
-        scheduler_t = lr_scheduler.CosineAnnealingLR(optimizer_t, T_max= total_epochs, eta_min=1e-7, verbose=True)
-        scheduler_b = lr_scheduler.CosineAnnealingLR(optimizer_b, T_max= total_epochs, eta_min=1e-7, verbose=True)
+        scheduler_t = lr_scheduler.CosineAnnealingLR(optimizer_t, T_max= total_epochs, eta_min=1e-7)
+        scheduler_b = lr_scheduler.CosineAnnealingLR(optimizer_b, T_max= total_epochs, eta_min=1e-7)
         
         for epoch in range(args.start_epoch, total_epochs):
             
