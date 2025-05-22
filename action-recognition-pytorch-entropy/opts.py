@@ -125,4 +125,8 @@ def arg_parser():
                              'fastest way to use PyTorch for either single node or '
                              'multi node data parallel training')
 
+    # New arguments for pretrained model locations
+    parser.add_argument('--pretrained_i3d', default='pretrained/K400-I3D-ResNet-50-f32.pth.tar', type=str, help='Path to pretrained i3d model')
+    parser.add_argument('--pretrained_resnet', default='pretrained/resnet50-19c8e357.pth', type=str, help='Path to pretrained resnet model')
+
     return parser

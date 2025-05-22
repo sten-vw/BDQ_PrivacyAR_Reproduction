@@ -306,13 +306,15 @@ def main_worker(gpu, ngpus_per_node, args):
     
     sys.stdout.flush()
     # https://github.com/IBM/action-recognition-pytorch/releases/download/weights-v0.1/K400-I3D-ResNet-50-f32.pth.tar
-    kinetics_path = 'pretrained/K400-I3D-ResNet-50-f32.pth.tar'
+    # kinetics_path = 'pretrained/K400-I3D-ResNet-50-f32.pth.tar'
+    kinetics_path = args.pretrained_i3d
     checkpoint = torch.load(kinetics_path)
     model_target.load_state_dict(checkpoint['state_dict'], strict= False)
     # # https://download.pytorch.org/models/resnet50-19c8e357.pth
     sys.stdout.flush()
 
-    imagenet_path = 'pretrained/resnet50-19c8e357.pth'
+    # imagenet_path = 'pretrained/resnet50-19c8e357.pth'
+    imagenet_path = args.pretrained_resnet
     checkpoint = torch.load(imagenet_path, weights_only=False)
     model_budget.load_state_dict(checkpoint, strict= False)
     
